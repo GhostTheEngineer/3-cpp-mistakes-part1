@@ -7,24 +7,33 @@
  * This source code is licensed under the MIT License. For more details, see
  * the LICENSE file in the root directory of this project.
  *
- * Version: v1.0.0
+ * Version: v1.0.1
  * Author: Ghost
  * Created On: 02-24-2025
  * Last Modified: 02-24-2025
  *****************************************************************************/
 
 #include <iostream>
-#include <cmath>  // Brings in `std::distance()`
+#include <cmath>  // Brings in `std::max()`
+#include <iterator> // FIX - Brings in std::distance() (not from cmath)
+#include <vector>
 
 /*
     Misconception #1: `using namespace std;` is always fine
     False: It pollutes the global namespace and can cause naming conflicts in large projects.
     Correct: Instead of `using namespace std;`, explicitly reference `std::cout`, `std::endl`, etc.
+
+    NOTE: this code is meant to fail to demonstrate the ambiguity it will create from the cause of 
+    the name pollution `using namespace std;`
+
+        If you wish to fix, just simply remove the `using namespace std;` and include the namespace 
+        qualifier to parts of code that matter like cout, distance(), max().
+
 */
 
 using namespace std;  // Pollutes the namespace!
 
-double distance = 5.0;  // Name conflicts with `std::distance()`
+double distance = 2.5;  // Name conflicts with `std::distance()`
 int max = 25;  // Name conflicts with `std::max()`
 
 int main() {
@@ -33,9 +42,10 @@ int main() {
     cout << "  Distance: " << distance << "\n"; // IDE knows the error!
 
     int x1 = 1, x2 = 10;
+    vector<int> vec = {1, 2, 3, 4, 5}; // NEW - meant to be used with distance function below
 
     // ERROR: Compiler doesn't know if `distance` is a variable or function!
-    cout << "  Distance: " << distance(x1, x2) << "\n";  // IDE knows the error!
+    cout << "  Distance: " << distance(vec.begin(), vec.end()) << "\n";  // FIX - using correct function from correct lib
 
     // You could rename `distance` to `dist` to fix it...
     // But what about `max`?
